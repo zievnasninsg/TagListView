@@ -16,6 +16,12 @@ import UIKit
 @IBDesignable
 open class TagListView: UIView {
     
+    @IBInspectable open dynamic var arrangeItemFromRight: Bool = false {
+        didSet {
+            rearrangeViews()
+        }
+    }
+    
     @IBInspectable open dynamic var textColor: UIColor = .white {
         didSet {
             tagViews.forEach {
@@ -312,6 +318,18 @@ open class TagListView: UIView {
             currentRowView.frame.size.width = currentRowWidth
             currentRowView.frame.size.height = max(tagViewHeight, currentRowView.frame.height)
         }
+        
+        if arrangeItemFromRight {
+            for rowView in rowViews {
+                var currentRowWidth: CGFloat = 0
+                for tagBackgroundView in rowView.subviews {
+                    
+                    tagBackgroundView.frame = CGRect(x: rowView.frame.size.width - tagBackgroundView.frame.size.width - currentRowWidth, y: 0, width: tagBackgroundView.frame.size.width, height: tagBackgroundView.frame.size.height)
+                    currentRowWidth += tagBackgroundView.frame.size.width + marginX
+                }
+            }
+        }
+        
         rows = currentRow
         
         invalidateIntrinsicContentSize()
